@@ -47,7 +47,7 @@ class MediaExtensionPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     /// The Method invoked when FlutterEngine is attached to the app
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        ///Application context is assigned to variable context 
+        ///Application context is assigned to variable context
         context = flutterPluginBinding.applicationContext
 
         ///Method Channel instance is created for channel [media_extension]
@@ -56,7 +56,7 @@ class MediaExtensionPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         ///To Trigger events in mainThread
         Handler(Looper.getMainLooper()).postDelayed({
 
-            /// `getIntentAction` method is invoked 
+            /// `getIntentAction` method is invoked
             /// to send data from android to flutter thread
             val intentChecker = getIntentAction()
             methodChannel.invokeMethod("getIntentAction", intentChecker)
@@ -145,6 +145,9 @@ class MediaExtensionPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                     resAction = IntentAction.valueOf("EDIT")
                 }
                 Intent.ACTION_VIEW -> {
+                    if (data != null) {
+                        result["uri"] = data.toString()
+                    }
                     resAction = IntentAction.valueOf("VIEW")
                     getResolvedContent(data!!, type!!, result)
                 }
@@ -251,7 +254,7 @@ class MediaExtensionPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
     }
 
-    /// The Method is used to list out all the available apps 
+    /// The Method is used to list out all the available apps
     ///  which can handle the Supplied Intent Action.
     private fun safeStartActivityChooser(title: String?, intent: Intent): Boolean {
         if (activity?.let { intent.resolveActivity(it.packageManager) } == null) {
